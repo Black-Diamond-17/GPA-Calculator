@@ -1,0 +1,5 @@
+body{font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;}
+.btn{background-color: rgb(246, 0, 0);}
+.btn:hover{background-color: rgb(176, 0, 0);}
+h1{border-bottom: 5px solid rgb(246, 0, 0);}
+#content{border-left: 5px solid rgb(246, 0, 0);}

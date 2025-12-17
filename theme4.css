@@ -1,0 +1,5 @@
+body{font-family:Verdana, Geneva, Tahoma, sans-serif;}
+.btn{background-color: rgb(200, 200, 0);}
+.btn:hover{background-color: rgb(170, 170, 0);}
+h1{border-bottom: 5px solid  rgb(200, 200, 0);}
+#content{border-left: 5px solid rgb(200, 200, 0);}

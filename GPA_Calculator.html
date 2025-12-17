@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <link id="link" rel="stylesheet" href="original.css">
+    <script src="../jquery-3.7.1.min.js"></script>
+    <script src="../script.js"></script>
+    <style>
+        *{box-sizing: border-box;}
+        .btn{
+            color: white;
+            font-weight: bolder;
+            width: 150px;
+            height: 30px;
+            border: none;
+            transition: 100ms;
+        }
+        .btn:hover{
+            opacity: 0.8;
+            transform: scale(1.01);
+        }
+        h1{
+            font-weight: bolder;
+            border-radius: 0 0 5px 0;
+            margin-left: 0px;
+            padding-left: 5px;
+            width: 100%;
+        }
+        #content{width: max-content; border-radius: 5px;}
+        #GPA {
+            border: solid black 0.5px;
+            width: 50px;
+            text-align: center;
+            margin-left: 10px;
+            padding: 2px 10px;
+        }
+        input#custom{width: 100px;}
+        input{
+            border: none;
+            border: 1px solid black;
+            border-radius: 2px;
+            width: 440px;
+            height: 20px;
+            margin: 5px 0px;
+        }
+        #themes{margin: 2px;}
+        #theme-container{display: flexbox}
+        #courseSection{margin: 5px; padding: 5px;}
+    </style>
+</head>
+<body>
+    <div id="theme-container">
+        <label for="theme">Choose Theme: </label><select name="theme" id="themes">
+            <option value="Original">Default</option>
+            <option value="Theme1">Theme 1</option>
+            <option value="Theme2">Theme 2</option>
+            <option value="Theme3">Theme 3</option>
+            <option value="Theme4">Theme 4</option>
+            <option value="None">None</option>
+        </select>
+        <label for="color" onclick="customOn()" ondblclick="customOff()">
+            <button>Custom</button>
+        </label><input type="color" name="color" id="custom" style="visibility: hidden;">
+        <button id="apply" onclick="apply()" style="visibility: hidden;">Apply</button>
+    </div>
+
+    <div id="content">    
+        <h1 id="demo">GPA Calculator</h1>
+        <div id="courseSection">
+            <div>Your GPA: <b id="GPA">0.00</b></div><br/>
+            <div>
+                <label for="courseMarks-1">Course 1 Marks:</label><br/>
+                <input type="number" min="0" max="100" name="course" id="courseMarks-1" placeholder="100"><br/>
+                <label for="creditUnit-1">Credit 1 Unit:</label><br/>
+                <input type="number" min="0" max="10" name="course" id="creditUnit-1" placeholder="2">
+            </div>
+        </div><br/>
+
+        <button id="addCourse" class="btn" onclick="addCourse()">Add Course</button>
+        <button id="removeCourse" class="btn" onclick="removeCourse()">Remove Course</button>
+        <button id="calculateGPA" class="btn" onclick="calculateGPA()">Calculate GPA</button>
+    </div>
+
+    <script>
+        let courseSection = document.getElementById("courseSection");
+        let courseMarks = document.getElementById("courseMarks-1");
+        let creditUnit = document.getElementById("creditUnit-1");
+        
+        let courseCount = 1;
+
+        function addCourse(){
+
+            courseCount++;
+            let addCourse = document.createElement("div");
+            addCourse.id = `course-${courseCount}`;
+            addCourse.innerHTML = `
+            <label for="courseMarks-${courseCount}">Course ${courseCount} Marks:</label><br/><input type="number" min="0" max="100" name="course" id="courseMarks-${courseCount}" placeholder="100"><br/>
+            <label for="creditUnit-${courseCount}">Credit ${courseCount} Unit:</label><br/><input type="number" min="0" max="10" name="course" id="creditUnit-${courseCount}" placeholder="2">
+            `
+            courseSection.appendChild(addCourse);
+
+            
+        }
+        function removeCourse(){
+
+                let removeCourse = document.getElementById(`course-${courseCount}`)
+                courseCount--;
+                if (courseCount < 1){courseCount += 1 ;}
+                removeCourse.remove(addCourse);
+                
+        }
+
+        function calculateGPA(){
+            
+            const mark = [];
+            const creditUnitList = [];
+            for(let n_courseCount = 1; n_courseCount<=courseCount; n_courseCount++){
+                const courseMarks = Number(document.getElementById(`courseMarks-${n_courseCount}`).value);
+                const creditUnit = Number(document.getElementById(`creditUnit-${n_courseCount}`).value);
+
+                if(courseMarks <= 100 && courseMarks >= 70){
+                    grade = 'A';
+                    mark.push(5 * creditUnit);
+                }
+                
+                else if(courseMarks <= 69 && courseMarks >= 60){
+                    grade = 'B';
+                    mark.push(4 * creditUnit);
+                }
+                
+                else if(courseMarks <= 59 && courseMarks >= 50){
+                    grade = 'C';
+                    mark.push(3 * creditUnit);
+                }
+                
+                else if(courseMarks <= 49 && courseMarks >= 45){
+                    grade = 'D';
+                    mark.push(2 * creditUnit);
+                }
+                
+                else if(courseMarks <= 44 && courseMarks >= 40){
+                    grade = 'E';
+                    mark.push(1 * creditUnit);
+                }
+                
+                else if(courseMarks <= 39 && courseMarks >= 0){
+                    grade = 'F';
+                    mark.push(0 * creditUnit);
+                }
+                else {
+                    alert("Invalid Score!");
+                    courseMarks = 0;
+                    creditUnit = 0;
+                }
+                creditUnitList.push(creditUnit)
+            }
+              
+            console.log(mark);
+            
+
+            let markListSum = mark.reduce(arraySum)
+            let creditUnitListSum = creditUnitList.reduce(arraySum)
+            //console.log(courseMarksListSum, creditUnitListSum)
+            function arraySum(total, value) {
+                return total + value;
+            }
+
+            let GPA = markListSum / creditUnitListSum;
+            document.getElementById("GPA").innerHTML = GPA.toFixed(2);
+            if(isNaN(GPA)){alert("Enter a valid Score!"); x=0; document.getElementById("GPA").innerHTML = x.toPrecision(3);}
+            
+            
+        }
+        
+        function themes(){
+            let themeSelect = document.getElementById('themes').value;
+            if (themeSelect == "Original"){document.getElementById("link").href = 'original.css';}
+            else if (themeSelect == "Theme1"){document.getElementById("link").href = 'theme1.css';}
+            else if (themeSelect == "Theme2"){document.getElementById("link").href = 'theme2.css';}
+            else if (themeSelect == "Theme3"){document.getElementById("link").href = 'theme3.css';}
+            else if (themeSelect == "Theme4"){document.getElementById("link").href = 'theme4.css';}
+            else if (themeSelect == "None"){document.getElementById("link").href = '#';}     
+        }
+        setInterval(themes, 100)
+
+        let colorInput = document.getElementById("custom");
+        
+        function customOn(){
+            colorInput.style.visibility = 'visible';
+            document.getElementById('apply').style.visibility = "visible";
+        }
+        function customOff(){
+            colorInput.style.visibility = 'hidden';
+            document.getElementById('apply').style.visibility = "hidden";
+        }
+        
+
+        function apply(){
+            let color = colorInput.value;
+            document.getElementById('content').style.borderLeftColor = color;
+            document.getElementById('demo').style.borderBottomColor = color;
+            let btn = document.getElementsByClassName("btn");
+            for(let i = 0; i < 3; i++){
+                btn[i].style.backgroundColor = color;
+            }
+        }
+    </script>
+</body>
+</html>
